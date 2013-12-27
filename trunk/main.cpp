@@ -1,4 +1,4 @@
-//Copyright (C) 2012, Benoît Naegel <b.naegel@unistra.fr>
+//Copyright (C) 2013, Benoît Naegel <b.naegel@unistra.fr>
 //This program is free software: you can use, modify and/or
 //redistribute it under the terms of the GNU General Public
 //License as published by the Free Software Foundation, either

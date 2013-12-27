@@ -1,3 +1,12 @@
+//Copyright (C) 2013, Benoît Naegel <b.naegel@unistra.fr>
+//This program is free software: you can use, modify and/or
+//redistribute it under the terms of the GNU General Public
+//License as published by the Free Software Foundation, either
+//version 3 of the License, or (at your option) any later
+//version. You should have received a copy of this license along
+//this program. If not, see <http://www.gnu.org/licenses/>.
+
+
 #ifndef CGRAPH_H
 #define CGRAPH_H
 
@@ -9,6 +18,8 @@
 
 using namespace LibTIM;
 using namespace std;
+
+/** Region adjacency graph **/
 
 class RAGraph {
 
@@ -38,7 +49,6 @@ public :
             for(int i=0; i<compNb.size(); i++) {
                 if(this->compNb[i]==index) return;
             }
-            //std::cout << "Sth inserted\n";
             compNb.push_back(index);
             allNb.push_back(index);
         }
@@ -47,16 +57,15 @@ public :
             for(int i=0; i<nonCompNb.size(); i++) {
                 if(nonCompNb[i]==index) return;
             }
-            //std::cout << "Non comp Sth  inserted\n";
             nonCompNb.push_back(index);
             allNb.push_back(index);
         }
     };
 
-     template <class T> void addBorders(Image<T> &im,
-                                      const TCoord *preWidth,
-                                      const TCoord *postWidth,
-                                      T value)
+    template <class T> void addBorders(Image<T> &im,
+                                       const TCoord *preWidth,
+                                       const TCoord *postWidth,
+                                       T value)
     {
         TSize newSize[3];
         const TSize *oriSize = im.getSize();
@@ -74,7 +83,7 @@ public :
         std::fill(temp.begin(), end,value);
         temp.copy(im, preWidth[0],preWidth[1],preWidth[2]);
 
-        im= temp;
+        im=temp;
     }
 
     Image <RGB> imSource;
@@ -192,13 +201,17 @@ class CColorSatLumOrdering : public CColorOrdering {
          }
 };
 
+
+/** Component-graph storage and computation **/
+
 class CGraph
 {
-    RAGraph *rag;
+    RAGraph *rag; /*!< Region adjacency graph on which is computed the component-graph */
 
     Image<RGB> imSource;
 
 public:
+    /** A node of the graph */
     struct Node {
         int index;
         RGB color;
@@ -224,27 +237,36 @@ public:
         //std::cout << "Compute RAG\n";
         this->rag=new RAGraph(imSource,connexity);
         //std::cout << "RAG computed\n";
-        //this->rag->print();
         }
     CGraph(RAGraph *rag) : rag(rag) {}
     ~CGraph() { delete rag;}
 
     Node *componentGraphNaive(FlatSE &connexity);
-    int computeGraph(CColorOrdering *order, CGraphWatcher *watcher);
 
+    /** Component-graph \ddot G **/
+    int computeGraph(CColorOrdering *order, CGraphWatcher *watcher);
+    /** Component-graph G **/
+    int computeGraphFull(CColorOrdering *order, CGraphWatcher *watcher);
+    //int computeGraph(CColorOrdering *order, CGraphWatcher *watcher);
+
+    /** Return synthetic images */
     static Image<RGB> syntheticImage();
     static Image<RGB> syntheticImage2();
 
+
+    /** Container of the nodes of the graph **/
     std::vector<Node *> graph;
+    /** Root of the graph **/
+    Node *root;
+
+    /** Write graph in dot format **/
     int writeDot(const char *filename);
 
-    //void computeArea();
     void areaFiltering(int areaMin);
     void reconstructMin();
+
     Image<RGB> constructImage(CColorOrdering *order);
 
-
-    int writeDot(Node *root, const char *filename);
     static bool notComparable(Image<RGB> &im, Point<TCoord> &p, Point<TCoord> &q);
 
     bool isEqual(Node *n, Node *m);
@@ -266,6 +288,7 @@ public:
     void contrastFiltering(int contrastMin, int contrastMax);
     void resetFiltering();
 
+    /** Adaptive filtering **/
     void adaptiveAreaFiltering(int p);
     void adaptiveContrastFiltering(int p);
 private:
@@ -274,7 +297,6 @@ private:
 
     vector<Node *> computeComponents(Image<RGB> &im, FlatSE &connexity);
 
-    Node *root;
 };
 
 #endif // CGRAPH_H

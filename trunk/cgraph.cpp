@@ -1,5 +1,13 @@
+//Copyright (C) 2013, Benoît Naegel <b.naegel@unistra.fr>
+//This program is free software: you can use, modify and/or
+//redistribute it under the terms of the GNU General Public
+//License as published by the Free Software Foundation, either
+//version 3 of the License, or (at your option) any later
+//version. You should have received a copy of this license along
+//this program. If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "cgraph.h"
-#include <QDebug>
 
 using namespace std;
 
@@ -1495,7 +1503,7 @@ int CGraph::writeDot(const char *filename)
             return 0;
         }
 
-        // Node::count représente le label maximum du réseau
+        /** Maximum label of the graph **/
         int labelMax=graph.size()+1;
         bool isActive[labelMax];
         for(int i=0; i<labelMax; i++) isActive[i]=true;
@@ -1740,70 +1748,70 @@ int CGraph::writeDot(const char *filename)
 
 
 
-///** theta..
-//* first version:
-//* -compute all components
-//* -compute inclusion relations/ construct links
-//* -compute the transitive reduction
-//**/
-//CGraph::Node * CGraph::componentGraphNaive(FlatSE &connexity)
-//{
-//    Image <RGB> im=this->imSource;
-//    OrderedQueue <RGB> pq;
+/**
+* Compute component-graph G
+* -compute all components
+* -compute inclusion relations/ construct links
+* -compute the transitive reduction
+**/
+int CGraph::computeGraphFull(CColorOrdering *order, CGraphWatcher *watcher)
+{
+    Image <RGB> im=this->imSource;
+    OrderedQueue <RGB> pq;
 
-//    vector<Node *> nodes;
+    vector<Node *> nodes;
 
-//    vector <RGB> colorProcessed;
+    vector <RGB> colorProcessed;
 
-//    //tri des points par valeur décroissante
-//    for(int i=0; i<im.getBufSize(); i++)
-//    {
-//        RGB value=im(i);
+    //tri des points par valeur décroissante
+    for(int i=0; i<im.getBufSize(); i++)
+    {
+        RGB value=im(i);
 
-//        int R=value[0];
-//        int G=value[1];
-//        int B=value[2];
+        int R=value[0];
+        int G=value[1];
+        int B=value[2];
 
-//        bool inQueue=false;
+        bool inQueue=false;
 
-//        for(int k=0; k<colorProcessed.size(); k++) {
-//            if(colorProcessed[k]==value)
-//                inQueue=true;
-//        }
+        for(int k=0; k<colorProcessed.size(); k++) {
+            if(colorProcessed[k]==value)
+                inQueue=true;
+        }
 
-//        if(!inQueue) {
-//            pq.put(-(R+G+B),value);
-//            colorProcessed.push_back(value);
-//        }
-//    }
+        if(!inQueue) {
+            pq.put(-(R+G+B),value);
+            colorProcessed.push_back(value);
+        }
+    }
 
-//    std::cout << "Begin compute components\n";
-//    clock_t c1=clock();
+    std::cout << "Begin compute components\n";
+    clock_t c1=clock();
 
-//    nodes=computeComponents(im,connexity);
+    nodes=computeComponents(im,connexity);
 
-//    std::cout << "Number of nodes: " << nodes.size() << "\n";
+    std::cout << "Number of nodes: " << nodes.size() << "\n";
 
-//     clock_t c2=clock();
-//    std::cout << "End compute components Time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
+     clock_t c2=clock();
+    std::cout << "End compute components Time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
 
-//    std::cout << "Begin compute links fast\n";
-//    c1=clock();
-//    computeLinksFast(nodes);
-//    c2=clock();
-//    std::cout << "End compute links fast Time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
+    std::cout << "Begin compute links fast\n";
+    c1=clock();
+    computeLinksFast(nodes);
+    c2=clock();
+    std::cout << "End compute links fast Time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
 
 
-//    std::cout << "Begin compute transitive reduction\n";
-//    c1=clock();
-//    computeTransitiveReduction(nodes);
-//    c2=clock();
-//    std::cout << "End compute transitive reduction time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
+    std::cout << "Begin compute transitive reduction\n";
+    c1=clock();
+    computeTransitiveReduction(nodes);
+    c2=clock();
+    std::cout << "End compute transitive reduction time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
 
-//    for(int i=0; i<nodes.size(); i++)
-//        graph.push_back(nodes[i]);
-//    //Node *root=addRoot(nodes);
+    for(int i=0; i<nodes.size(); i++)
+        graph.push_back(nodes[i]);
+    //Node *root=addRoot(nodes);
 
-//    //return root;
+    //return root;
 
-//}
+}
