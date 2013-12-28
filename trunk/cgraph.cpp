@@ -1555,62 +1555,6 @@ int CGraph::writeDot(const char *filename)
 
 
 
-
-///** compute the components for theta.. :
-//* for each point p compute the node in which p belongs
-//**/
-//vector<CGraph::Node *> CGraph::computeComponents(Image<RGB> &im, FlatSE &connexity)
-//{
-//    int dx=im.getSizeX();
-//    int dy=im.getSizeY();
-
-//    vector <Node *> nodes;
-
-//    Image<bool> active(im.getSize());
-//    Image<bool> inQueue(im.getSize());
-//    active.fill(true);
-//    inQueue.fill(false);
-//    std::queue<Point<TCoord > > fifo;
-
-//    int index=0;
-
-//    for(int y=0; y<dy; y++)
-//        for(int x=0;x<dx; x++) {
-//            if(active(x,y)) {
-//                Point <TCoord> p(x,y);
-//                inQueue.fill(false);
-//                // new node
-//                fifo.push(p);
-//                active(p)=false;
-//                inQueue(p)=true;
-//                Node *n=new Node(index,im(p),0);
-//                index++;
-//                while(!fifo.empty()) {
-//                    Point<TCoord> p=fifo.front();
-//                    fifo.pop();
-
-//                    n->area++;
-//                    n->pixels.push_back(im.getOffset(p));
-//                    for(int i=0; i<connexity.getNbPoints(); i++) {
-//                        Point<TCoord> q=p+connexity.getPoint(i);
-//                        // p and q belong to the same node: mark as not active to avoid computing two times the same node
-
-//                        if(im.isPosValid(q)) {
-//                            if(im(q)==n->color) active(q)=false;
-//                            if(inQueue(q)==false && im(q)>=n->color) {
-//                                fifo.push(q);
-//                                inQueue(q)=true;
-//                            }
-//                        }
-//                    }
-//                }
-//                nodes.push_back(n);
-//            }
-
-//        }
-//    return nodes;
-//}
-
 ///** check if set n is equal to m */
 //bool CGraph::isEqual(Node *n, Node *m) {
 
@@ -1631,120 +1575,170 @@ int CGraph::writeDot(const char *filename)
 //    return true;
 //}
 
-///** check if set n is included in m */
-//bool CGraph::isIncluded(Node *n, Node *m) {
-
-//    for(int i=0; i<n->pixels.size(); i++) {
-//        TOffset curPixel=n->pixels[i];
-//        bool curPixelIncluded=false;
-//        for(int j=0; j<m->pixels.size(); j++) {
-//            if(curPixel==m->pixels[j])
-//                {
-//                curPixelIncluded=true;
-//                }
-//        }
-//        if(curPixelIncluded==false) return false;
-//    }
-
-//    return true;
-//}
 
 
-///** check if set n is included in m
-//* faster version
-//*/
-//bool CGraph::isIncludedFast(Node *n, Node *m, vector<bool> &tmp) {
+/** Test if set n is included in m
+*/
+bool CGraph::isIncluded(Node *n, Node *m, vector<bool> &tmp)
+{
+    tmp.assign(tmp.size(), false);
+    for(int i=0; i<m->pixels.size(); i++)
+        tmp[m->pixels[i]]=true;
+
+    for(int i=0; i<n->pixels.size(); i++)
+        if(tmp[n->pixels[i]]==false) return false;
+    return true;
+}
+
+void CGraph::computeLinks(CColorOrdering *order, vector <Node *> &nodes)
+{
+    vector<bool> tmp(imSource.getBufSize(),false);
+    for(int i=0; i<nodes.size(); i++) {
+        Node *n=nodes[i];
+        for(int j=0; j<nodes.size(); j++) {
+            if(j!=i && nodes[j]->area<=nodes[i]->area && order->islessequal(nodes[i]->color,nodes[j]->color)) {
+                Node *m=nodes[j];
+                if(!order->isequal(m->color,n->color) && isIncluded(m,n,tmp)) {
+                    n->addChild(m);
+                }
+            }
+        }
+    }
+}
 
 
-//    tmp.assign(tmp.size(), false);
-//    for(int i=0; i<m->pixels.size(); i++)
-//        tmp[m->pixels[i]]=true;
 
-//    for(int i=0; i<n->pixels.size(); i++)
-//        if(tmp[n->pixels[i]]==false) return false;
-//    return true;
-//}
+CGraph::Node * CGraph::addRoot(vector <Node *> &nodes)
+{
+    Node *root=new Node(-1,0 ,0);
 
-//void CGraph::computeLinksFast(vector <Node *> &nodes) {
-
-//    vector<bool> tmp(imSource.getBufSize(),false);
-//    for(int i=0; i<nodes.size(); i++) {
-//        Node *n=nodes[i];
-//        for(int j=0; j<nodes.size(); j++) {
-//            if(j!=i && nodes[j]->area<nodes[i]->area) {
-//                Node *m=nodes[j];
-//                if(isIncludedFast(m,n,tmp)) {
-//                    n->addChild(m);
-//                }
-//            }
-//        }
-//    }
-//}
+    for (int i=0; i<nodes.size(); i++) {
+        if(nodes[i]->fathers.size()==0) {
+            root->addChild(nodes[i]);
+        }
+    }
+    return root;
+}
 
 
-//void CGraph::computeLinks(vector <Node *> &nodes) {
+vector <CGraph::Node *> CGraph::minimalElements(CColorOrdering *order, vector <Node *> &nodes, vector <bool> &tmp) {
+    vector <Node *> res;
 
-//    for(int i=0; i<nodes.size(); i++) {
-//        Node *n=nodes[i];
-//        for(int j=0; j<nodes.size(); j++) {
-//            if(j!=i && nodes[j]->area<nodes[i]->area) {
-//                Node *m=nodes[j];
-//                if(isIncluded(m,n)) {
-//                    n->addChild(m);
-//                }
-//            }
-//        }
-//    }
-//}
+    vector <bool> active(nodes.size(), true);
+    for(int j=0; j<nodes.size(); j++) {
+        RGB i=nodes[j]->color;
+        for(int k=0; k<nodes.size(); k++) {
+            if(k!=j) {
+                RGB value2=nodes[k]->color;
+                if(order->islessequal(i,value2) && isIncluded(nodes[k],nodes[j], tmp) ) {
+                    active[k]=false;
+                }
+            }
+        }
+    }
 
-//CGraph::Node * CGraph::addRoot(vector <Node *> &nodes) {
+    for(int j=0; j<nodes.size(); j++) {
+        if(active[j]) res.push_back(nodes[j]);
+    }
 
-//    Node *root=new Node(-1,0 ,0);
+    return res;
+}
 
-//    for (int i=0; i<nodes.size(); i++) {
-//        if(nodes[i]->fathers.size()==0) {
-//            root->addChild(nodes[i]);
-//        }
-//    }
-//    return root;
-//}
+/** Compute transitive reduction of graph from its root
+* For each node:
+*  - keep as childs only the minimal elements of the childs
+*/
+void CGraph::computeTransitiveReduction(CColorOrdering *order, vector<Node *> &nodes)
+{
+    vector<bool> tmp(imSource.getBufSize(),false);
+    for(int i=0; i<nodes.size(); i++) {
+        Node *curNode=nodes[i];
+        curNode->childs=minimalElements(order,curNode->childs, tmp);
+    }
+}
 
 
-//vector <CGraph::Node *> CGraph::minimalElements(vector <Node *> &nodes, vector <bool> &tmp) {
-//    vector <Node *> res;
 
-//    vector <bool> active(nodes.size(), true);
-//    for(int j=0; j<nodes.size(); j++) {
-//        RGB i=nodes[j]->color;
-//        for(int k=0; k<nodes.size(); k++) {
-//            if(k!=j) {
-//                RGB value2=nodes[k]->color;
-//                if(isIncludedFast(nodes[k],nodes[j], tmp) ) {
-//                    active[k]=false;
-//                }
-//            }
-//        }
-//    }
 
-//    for(int j=0; j<nodes.size(); j++) {
-//        if(active[j]) res.push_back(nodes[j]);
-//    }
 
-//    return res;
-//}
+/** Compute the nodes for G and \dot G component-graph
+**/
+vector<CGraph::Node *> CGraph::computeComponents(CColorOrdering *order, OrderedQueue <RGB> &pq)
+{
+    int dx=imSource.getSizeX();
+    int dy=imSource.getSizeY();
 
-///** compute transitive reduction of graph from its root
-//* for each node:
-//*  - keep as childs only the minimal elements of the childs
-//*/
-//void CGraph::computeTransitiveReduction(vector<Node *> &nodes)
-//{
-//    vector<bool> tmp(imSource.getBufSize(),false);
-//    for(int i=0; i<nodes.size(); i++) {
-//        Node *curNode=nodes[i];
-//        curNode->childs=minimalElements(curNode->childs, tmp);
-//    }
-//}
+    vector <Node *> nodes;
+
+    Image<bool> active(imSource.getSize());
+    Image<bool> inQueue(imSource.getSize());
+
+    inQueue.fill(false);
+    std::queue<Point<TCoord > > fifo;
+
+    int index=1;
+
+    while(!pq.empty())
+    {
+        RGB value=pq.get();
+
+        active.fill(true);
+
+        int ncomposantes=0;
+
+        for(int y=0; y<dy; y++)
+            for(int x=0;x<dx; x++) {
+
+                if(active(x,y) && order->islessequal(value,imSource(x,y))) {
+                /** Construct a new node and begin a propagation
+                **/
+                    Point <TCoord> p(x,y);
+                    inQueue.fill(false);
+
+                    fifo.push(p);
+                    ncomposantes++;
+                    inQueue(p)=true;
+
+                    Node *n=new Node(index,value,0);
+                    index++;
+
+                     if(index%100000==0)
+                    {
+                        std::cout << "Node : " << n->index << " Value: "<< (int)value[0] << "," << (int)value[1] << "," << (int)value[2] << "\n";
+                    }
+
+                    while(!fifo.empty()) {
+                        Point<TCoord> curPt=fifo.front();
+                        fifo.pop();
+
+                        active(curPt)=false;
+
+                        n->area++;
+                        n->pixels.push_back(imSource.getOffset(curPt));
+                        for(int i=0; i<connexity.getNbPoints(); i++) {
+                            Point<TCoord> q=curPt+connexity.getPoint(i);
+
+                            if(imSource.isPosValid(q)) {
+
+                                if(inQueue(q)==false && order->islessequal(n->color,imSource(q)) ) {
+                                    fifo.push(q);
+                                    inQueue(q)=true;
+                                }
+                            }
+                        }
+                    }
+                    nodes.push_back(n);
+                }
+
+            }
+        if(ncomposantes!=0) {
+        std::cout << "Level: " << (int)value[0] << " " << (int)value[1] << " " << (int)value[2] << "\n";
+        std::cout << "N Composantes : " << ncomposantes << "\n";
+        }
+    }
+
+    return nodes;
+}
 
 
 
@@ -1763,55 +1757,47 @@ int CGraph::computeGraphFull(CColorOrdering *order, CGraphWatcher *watcher)
 
     vector <RGB> colorProcessed;
 
-    //tri des points par valeur décroissante
-    for(int i=0; i<im.getBufSize(); i++)
-    {
-        RGB value=im(i);
+    /** Put all colors in priority queue
+    **/
+    for(int r=0; r<256; r++)
+        for(int g=0; g<256; g++)
+            for(int b=0; b<256; b++)
+            {
+                RGB value(r,g,b);
+                pq.put(order->getPriority(value),value);
 
-        int R=value[0];
-        int G=value[1];
-        int B=value[2];
-
-        bool inQueue=false;
-
-        for(int k=0; k<colorProcessed.size(); k++) {
-            if(colorProcessed[k]==value)
-                inQueue=true;
-        }
-
-        if(!inQueue) {
-            pq.put(-(R+G+B),value);
-            colorProcessed.push_back(value);
-        }
-    }
+            }
 
     std::cout << "Begin compute components\n";
     clock_t c1=clock();
 
-    nodes=computeComponents(im,connexity);
+    nodes=computeComponents(order,pq);
 
     std::cout << "Number of nodes: " << nodes.size() << "\n";
 
      clock_t c2=clock();
     std::cout << "End compute components Time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
 
-    std::cout << "Begin compute links fast\n";
-    c1=clock();
-    computeLinksFast(nodes);
-    c2=clock();
-    std::cout << "End compute links fast Time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
 
-
-    std::cout << "Begin compute transitive reduction\n";
+    std::cout << "Begin compute links\n";
     c1=clock();
-    computeTransitiveReduction(nodes);
+    computeLinks(order,nodes);
     c2=clock();
-    std::cout << "End compute transitive reduction time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
+    std::cout << "End compute links Time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
 
     for(int i=0; i<nodes.size(); i++)
         graph.push_back(nodes[i]);
-    //Node *root=addRoot(nodes);
+    root=addRoot(nodes);
 
-    //return root;
+    writeDot("fulllinks.dot");
+//    std::cout << "Begin compute transitive reduction\n";
+//    c1=clock();
+   computeTransitiveReduction(order, nodes);
+//    c2=clock();
+//    std::cout << "End compute transitive reduction time : " << (double)(c2-c1)*1000/CLOCKS_PER_SEC << "ms\n\n";
 
+
+
+    writeDot("fullgraph.dot");
+    return 0;
 }

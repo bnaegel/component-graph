@@ -156,16 +156,17 @@ int main(int argc, char *argv[])
     // Load source image imSrc, 2D RGB (8 bits)
     Image<RGB>::load(argv[1],imSrc);
 
-    imHSV=convertRGBtoHSV(imSrc);
-    imHSV.save("hsv.ppm");
-    imOut=convertHSVtoRGB(imHSV);
-    imOut.save("rgb.ppm");
+//    imHSV=convertRGBtoHSV(imSrc);
+//    imHSV.save("hsv.ppm");
+//    imOut=convertHSVtoRGB(imHSV);
+//    imOut.save("rgb.ppm");
+
 
 
 //    int areaMin=atoi(argv[2]);
 
-//    FlatSE connexity;
-//    connexity.make2DN8();
+    FlatSE connexity;
+    connexity.make2DN8();
 
 //    Image <RGB> imTest=CGraph::syntheticImage2();
 
@@ -175,10 +176,11 @@ int main(int argc, char *argv[])
 //    */
 
 //    //CGraph *cgraph=new CGraph(imTest,connexity);
-//    CGraph *cgraph=new CGraph(imSrc,connexity);
+    CGraph *cgraph=new CGraph(imSrc,connexity);
 //    //CGraphSpace::Core *algo=new CGraphSpace::Core(imSrc);
-//    graphWatcher *myWatcher=new graphWatcher(imSrc.getBufSize());
-//    cgraph->computeGraph(myWatcher);
+    graphWatcher *myWatcher=new graphWatcher(imSrc.getBufSize());
+    CColorMarginalOrdering  *order=new CColorMarginalOrdering();
+    cgraph->computeGraphFull(order,myWatcher);
 //    cgraph->writeDot("cgraph.dot");
 
 //    std::cout << "Fast algorithm for component graph\n";
