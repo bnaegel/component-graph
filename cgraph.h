@@ -209,6 +209,7 @@ class CGraph
     RAGraph *rag; /*!< Region adjacency graph on which is computed the component-graph */
 
     Image<RGB> imSource;
+    FlatSE connexity;
 
 public:
     /** A node of the graph */
@@ -234,6 +235,7 @@ public:
 
     CGraph(Image <RGB> &imSource, FlatSE &connexity) {
         this->imSource=imSource;
+        this->connexity=connexity;
         //std::cout << "Compute RAG\n";
         this->rag=new RAGraph(imSource,connexity);
         //std::cout << "RAG computed\n";
@@ -247,7 +249,6 @@ public:
     int computeGraph(CColorOrdering *order, CGraphWatcher *watcher);
     /** Component-graph G **/
     int computeGraphFull(CColorOrdering *order, CGraphWatcher *watcher);
-    //int computeGraph(CColorOrdering *order, CGraphWatcher *watcher);
 
     /** Return synthetic images */
     static Image<RGB> syntheticImage();
@@ -267,16 +268,17 @@ public:
 
     Image<RGB> constructImage(CColorOrdering *order);
 
+    /** Helper functions **/
+    vector<CGraph::Node *> computeComponents(CColorOrdering *order, OrderedQueue<RGB> &pq);
     static bool notComparable(Image<RGB> &im, Point<TCoord> &p, Point<TCoord> &q);
 
     bool isEqual(Node *n, Node *m);
     bool isIncluded(Node *n, Node *m);
     bool isIncludedFast(Node *n, Node *m, vector<bool> &tmp);
-    void computeLinksFast(vector<Node *> &nodes);
-    void computeLinks(vector<Node *> &nodes);
+    void computeLinks(CColorOrdering *order, vector<Node *> &nodes);
     Node *addRoot(vector<Node *> &nodes);
-    vector<Node *> minimalElements(vector<Node *> &nodes, vector<bool> &tmp);
-    void computeTransitiveReduction(vector<Node *> &nodes);
+    vector<Node *> minimalElements(CColorOrdering *order, vector<Node *> &nodes, vector<bool> &tmp);
+    void computeTransitiveReduction(CColorOrdering *order, vector<Node *> &nodes);
 
     int computeGraphInverse(CGraphWatcher *watcher);
     Image<RGB> constructImageInf();
@@ -291,6 +293,8 @@ public:
     /** Adaptive filtering **/
     void adaptiveAreaFiltering(int p);
     void adaptiveContrastFiltering(int p);
+
+    bool isIncluded(Node *n, Node *m, vector<bool> &tmp);
 private:
     void paintNode(Image<RGB> &im, Node *n, RGB &value);
     void paintNodeSup(Image<RGB> &imRes, Node *n, RGB &value);
