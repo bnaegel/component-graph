@@ -1657,10 +1657,6 @@ void CGraph::computeTransitiveReduction(CColorOrdering *order, vector<Node *> &n
     }
 }
 
-
-
-
-
 /** Compute the nodes for G and \dot G component-graph
 **/
 vector<CGraph::Node *> CGraph::computeComponents(CColorOrdering *order, OrderedQueue <RGB> &pq)
