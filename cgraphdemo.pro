@@ -36,8 +36,6 @@ HEADERS += \
     ImageIO.hxx \
     Image.hxx \
     cgraph.h \
-    ComponentTree.hxx \
-    ComponentTree.h \
     Morphology.hxx \
     Morphology.h
 
