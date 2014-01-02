@@ -35,7 +35,5 @@ HEADERS += \
     ImageIterators.h \
     ImageIO.hxx \
     Image.hxx \
-    cgraph.h \
-    Morphology.hxx \
-    Morphology.h
+    cgraph.h
 
