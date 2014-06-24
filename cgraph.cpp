@@ -286,8 +286,6 @@ int CGraph::computeGraph(CColorOrdering *order, CGraphWatcher *watcher) {
             int M=0;
             while(!fifo.empty()) {
                 int curpt=fifo.front();
-
-
                 M++;
                 fifo.pop();
                 RAGraph::Vertex *tmpVertex=rag->nodes[curpt];
@@ -608,9 +606,6 @@ void CGraph::adaptiveAreaFiltering(int p)
 */
 void CGraph::adaptiveContrastFiltering(int p)
 {
-
-
-
     std::map<int, int> histo;
     for(int i=0; i<graph.size(); i++) {
         Node *n=graph[i];
