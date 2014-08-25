@@ -16,7 +16,7 @@ TARGET = cgraph
 
 
 
-QT+=core gui widgets
+QT+=core gui widgets concurrent
 SOURCES += \
     mainwindow.cpp \
     main.cpp \
@@ -25,7 +25,8 @@ SOURCES += \
     noise.cpp \
     dialogNoise.cpp \
     dialogimpulsenoise.cpp \
-    ../cgraph.cpp
+    ../cgraph.cpp \
+    ../ragraph.cpp
 
 INCLUDEPATH+=..
 
@@ -36,7 +37,9 @@ HEADERS += \
     noise.h \
     dialogNoise.h \
     dialogimpulsenoise.h \
-    ../cgraph.h
+    ../cgraph.h \
+    ../colorordering.h \
+    ../ragraph.h
 
 FORMS += \
     mainwindow.ui \

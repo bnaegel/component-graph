@@ -65,7 +65,7 @@ public:
 
     CGraphQtWatcher *cgraphWatcher;
     CGraph *algo;
-    CColorOrdering *order;
+    ColorOrdering *order;
 
     Image<RGB> imSource;
     Image<RGB> imHSV;

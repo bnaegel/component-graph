@@ -1,3 +1,4 @@
+//Copyright (C) 2014, Benoît Naegel <b.naegel@unistra.fr>
 //This program is free software: you can use, modify and/or
 //redistribute it under the terms of the GNU General Public
 //License as published by the Free Software Foundation, either
@@ -9,6 +10,8 @@
 #include <ctime>
 
 #include "cgraph.h"
+#include "cgraphwatcher.h"
+#include "colorordering.h"
 
 using namespace std;
 
@@ -67,7 +70,7 @@ int main(int argc, char *argv[])
     // Track computation progress
     graphWatcher *myWatcher=new graphWatcher(imSrc.getBufSize());
     // Set marginal ordering on RGB colour space
-    CColorMarginalOrdering  *order=new CColorMarginalOrdering();
+    ColorMarginalOrdering  *order=new ColorMarginalOrdering();
     // Compute \ddot component-graph
     cgraph->computeGraph(order,myWatcher);
 

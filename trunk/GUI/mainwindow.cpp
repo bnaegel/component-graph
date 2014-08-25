@@ -405,12 +405,12 @@ void MainWindow::on_checkBoxComponent_stateChanged(int arg1)
 {
     if(ui->checkBoxComponent->isChecked()) {
         if(coreFilter->order!=0) delete coreFilter->order;
-        coreFilter->order=new CColorMarginalOrdering();
+        coreFilter->order=new ColorMarginalOrdering();
     }
 
     if(ui->checkBoxInverseComponent->isChecked()) {
         if(coreFilter->order!=0) delete coreFilter->order;
-        coreFilter->order=new CColorMarginalInverseOrdering();
+        coreFilter->order=new ColorMarginalInverseOrdering();
     }
     resultComputed=false;
 }
