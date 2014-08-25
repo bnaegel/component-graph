@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'dialogimpulsenoise.ui'
 **
-** Created: Thu Jan 2 17:02:18 2014
+** Created: Mon Aug 25 10:29:43 2014
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

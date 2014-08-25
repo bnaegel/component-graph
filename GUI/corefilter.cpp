@@ -110,7 +110,7 @@ int CoreFilter::computeGraphMultiThread(int nx, int ny)
 
     cgraphWatcher->reset();
     if(order==0)
-        order=new CColorMarginalOrdering();
+        order=new ColorMarginalOrdering();
 
     //imageToPatch(imNoisy,nx,ny);
 

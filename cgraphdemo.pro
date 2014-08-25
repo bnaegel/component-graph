@@ -24,7 +24,10 @@ QMAKE_CXXFLAGS_RELEASE *= -O3
 
 SOURCES += \
     cgraph.cpp \
-    cgraphdemo.cpp
+    cgraphdemo.cpp \
+    ragraph.cpp \
+    cgraphwatcher.cpp \
+    colorordering.cpp
 
 HEADERS += \
     OrderedQueue.h \
@@ -35,5 +38,8 @@ HEADERS += \
     ImageIterators.h \
     ImageIO.hxx \
     Image.hxx \
-    cgraph.h
+    cgraph.h \
+    ragraph.h \
+    cgraphwatcher.h \
+    colorordering.h
 
