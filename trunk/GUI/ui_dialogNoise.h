@@ -11,15 +11,15 @@
 #define UI_DIALOGNOISE_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QDoubleSpinBox>
-#include <QtGui/QGroupBox>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
+#include <QAction>
+#include <QApplication>
+#include <QButtonGroup>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QDoubleSpinBox>
+#include <QGroupBox>
+#include <QHeaderView>
+#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 
@@ -69,10 +69,10 @@ public:
 
     void retranslateUi(QDialog *Dialog)
     {
-        Dialog->setWindowTitle(QApplication::translate("Dialog", "Dialog", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("Dialog", "Gaussian noise parameters", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("Dialog", "Mean", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("Dialog", "Std-dev", 0, QApplication::UnicodeUTF8));
+        Dialog->setWindowTitle(QApplication::translate("Dialog", "Dialog", 0));
+        groupBox->setTitle(QApplication::translate("Dialog", "Gaussian noise parameters", 0));
+        label->setText(QApplication::translate("Dialog", "Mean", 0));
+        label_2->setText(QApplication::translate("Dialog", "Std-dev", 0));
     } // retranslateUi
 
 };
