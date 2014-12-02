@@ -11,15 +11,15 @@
 #define UI_DIALOGIMPULSENOISE_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QGroupBox>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QSpinBox>
+#include <QAction>
+#include <QApplication>
+#include <QButtonGroup>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QGroupBox>
+#include <QHeaderView>
+#include <QLabel>
+#include <QSpinBox>
 
 QT_BEGIN_NAMESPACE
 
@@ -61,9 +61,9 @@ public:
 
     void retranslateUi(QDialog *DialogImpulseNoise)
     {
-        DialogImpulseNoise->setWindowTitle(QApplication::translate("DialogImpulseNoise", "Dialog", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("DialogImpulseNoise", "Impulse noise parameters", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("DialogImpulseNoise", "Rate:", 0, QApplication::UnicodeUTF8));
+        DialogImpulseNoise->setWindowTitle(QApplication::translate("DialogImpulseNoise", "Dialog", 0));
+        groupBox->setTitle(QApplication::translate("DialogImpulseNoise", "Impulse noise parameters", 0));
+        label->setText(QApplication::translate("DialogImpulseNoise", "Rate:", 0));
     } // retranslateUi
 
 };

@@ -11,24 +11,24 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGroupBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QMainWindow>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QProgressBar>
-#include <QtGui/QPushButton>
-#include <QtGui/QScrollArea>
-#include <QtGui/QSlider>
-#include <QtGui/QSpinBox>
-#include <QtGui/QStatusBar>
-#include <QtGui/QWidget>
+#include <QAction>
+#include <QApplication>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QLabel>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSlider>
+#include <QSpinBox>
+#include <QStatusBar>
+#include <QWidget>
 #include <maindisplay.h>
 
 QT_BEGIN_NAMESPACE
@@ -353,46 +353,46 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
-        actionLoad_Image->setText(QApplication::translate("MainWindow", "Load Image", 0, QApplication::UnicodeUTF8));
-        actionSimplification->setText(QApplication::translate("MainWindow", "Simplification", 0, QApplication::UnicodeUTF8));
-        actionDetection->setText(QApplication::translate("MainWindow", "Detection", 0, QApplication::UnicodeUTF8));
-        actionSynthetic_Image->setText(QApplication::translate("MainWindow", "Synthetic Image", 0, QApplication::UnicodeUTF8));
-        actionImpulse_noise->setText(QApplication::translate("MainWindow", "Impulse noise", 0, QApplication::UnicodeUTF8));
-        actionGaussian_noise->setText(QApplication::translate("MainWindow", "Gaussian noise", 0, QApplication::UnicodeUTF8));
-        actionSave_result->setText(QApplication::translate("MainWindow", "Save result", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("MainWindow", "Select image", 0, QApplication::UnicodeUTF8));
-        checkBoxOriginal->setText(QApplication::translate("MainWindow", "Original", 0, QApplication::UnicodeUTF8));
-        checkBoxNoisy->setText(QApplication::translate("MainWindow", "Noisy", 0, QApplication::UnicodeUTF8));
-        checkBoxDenoised->setText(QApplication::translate("MainWindow", "Denoised", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWindow", "Area min", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("MainWindow", "Area max", 0, QApplication::UnicodeUTF8));
-        groupBox_2->setTitle(QApplication::translate("MainWindow", "Area", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        actionLoad_Image->setText(QApplication::translate("MainWindow", "Load Image", 0  ));
+        actionSimplification->setText(QApplication::translate("MainWindow", "Simplification", 0   ));
+        actionDetection->setText(QApplication::translate("MainWindow", "Detection", 0   ));
+        actionSynthetic_Image->setText(QApplication::translate("MainWindow", "Synthetic Image", 0   ));
+        actionImpulse_noise->setText(QApplication::translate("MainWindow", "Impulse noise", 0   ));
+        actionGaussian_noise->setText(QApplication::translate("MainWindow", "Gaussian noise", 0   ));
+        actionSave_result->setText(QApplication::translate("MainWindow", "Save result", 0   ));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Select image", 0   ));
+        checkBoxOriginal->setText(QApplication::translate("MainWindow", "Original", 0   ));
+        checkBoxNoisy->setText(QApplication::translate("MainWindow", "Noisy", 0   ));
+        checkBoxDenoised->setText(QApplication::translate("MainWindow", "Denoised", 0   ));
+        label_2->setText(QApplication::translate("MainWindow", "Area min", 0   ));
+        label_3->setText(QApplication::translate("MainWindow", "Area max", 0   ));
+        groupBox_2->setTitle(QApplication::translate("MainWindow", "Area", 0   ));
         labelAreaMin->setText(QString());
         labelAreaMax->setText(QString());
-        groupBox_3->setTitle(QApplication::translate("MainWindow", "Contrast", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "Contrast min", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("MainWindow", "Contrast max", 0, QApplication::UnicodeUTF8));
+        groupBox_3->setTitle(QApplication::translate("MainWindow", "Contrast", 0   ));
+        label_5->setText(QApplication::translate("MainWindow", "Contrast min", 0   ));
+        label_4->setText(QApplication::translate("MainWindow", "Contrast max", 0   ));
         labelContrastMin->setText(QString());
         labelContrastMax->setText(QString());
-        pushButton_2->setText(QApplication::translate("MainWindow", "Compute graph multi-thread", 0, QApplication::UnicodeUTF8));
-        groupBox_4->setTitle(QApplication::translate("MainWindow", "Patchs definition", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("MainWindow", "Division in width", 0, QApplication::UnicodeUTF8));
-        label_7->setText(QApplication::translate("MainWindow", "Division in height", 0, QApplication::UnicodeUTF8));
-        groupBox_5->setTitle(QApplication::translate("MainWindow", "Color space", 0, QApplication::UnicodeUTF8));
-        checkBoxRGB->setText(QApplication::translate("MainWindow", "RGB space", 0, QApplication::UnicodeUTF8));
-        checkBoxHSV->setText(QApplication::translate("MainWindow", "HSV space", 0, QApplication::UnicodeUTF8));
-        checkBoxSV->setText(QApplication::translate("MainWindow", "SV space + H", 0, QApplication::UnicodeUTF8));
-        groupBox_6->setTitle(QApplication::translate("MainWindow", "Ordering", 0, QApplication::UnicodeUTF8));
-        checkBoxComponent->setText(QApplication::translate("MainWindow", "Component-wise", 0, QApplication::UnicodeUTF8));
-        checkBoxInverseComponent->setText(QApplication::translate("MainWindow", "Inverse", 0, QApplication::UnicodeUTF8));
-        adaptiveArea->setText(QApplication::translate("MainWindow", "Adaptive filtering: area", 0, QApplication::UnicodeUTF8));
-        adaptiveContrast->setText(QApplication::translate("MainWindow", "Adaptive filtering: contrast", 0, QApplication::UnicodeUTF8));
+        pushButton_2->setText(QApplication::translate("MainWindow", "Compute graph multi-thread", 0   ));
+        groupBox_4->setTitle(QApplication::translate("MainWindow", "Patchs definition", 0   ));
+        label_6->setText(QApplication::translate("MainWindow", "Division in width", 0   ));
+        label_7->setText(QApplication::translate("MainWindow", "Division in height", 0   ));
+        groupBox_5->setTitle(QApplication::translate("MainWindow", "Color space", 0   ));
+        checkBoxRGB->setText(QApplication::translate("MainWindow", "RGB space", 0   ));
+        checkBoxHSV->setText(QApplication::translate("MainWindow", "HSV space", 0   ));
+        checkBoxSV->setText(QApplication::translate("MainWindow", "SV space + H", 0   ));
+        groupBox_6->setTitle(QApplication::translate("MainWindow", "Ordering", 0   ));
+        checkBoxComponent->setText(QApplication::translate("MainWindow", "Component-wise", 0   ));
+        checkBoxInverseComponent->setText(QApplication::translate("MainWindow", "Inverse", 0   ));
+        adaptiveArea->setText(QApplication::translate("MainWindow", "Adaptive filtering: area", 0   ));
+        adaptiveContrast->setText(QApplication::translate("MainWindow", "Adaptive filtering: contrast", 0   ));
         labelAdaptiveArea->setText(QString());
         labelAdaptiveContrast->setText(QString());
-        menuComponent_Graph->setTitle(QApplication::translate("MainWindow", "Component Graph", 0, QApplication::UnicodeUTF8));
-        menuProcessing->setTitle(QApplication::translate("MainWindow", "Processing", 0, QApplication::UnicodeUTF8));
-        menuAdd_noise->setTitle(QApplication::translate("MainWindow", "Add noise", 0, QApplication::UnicodeUTF8));
+        menuComponent_Graph->setTitle(QApplication::translate("MainWindow", "Component Graph", 0   ));
+        menuProcessing->setTitle(QApplication::translate("MainWindow", "Processing", 0   ));
+        menuAdd_noise->setTitle(QApplication::translate("MainWindow", "Add noise", 0   ));
     } // retranslateUi
 
 };
