@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     // Declaration of :
     // -connexity (8-adjacency)
     FlatSE connexity;
-    connexity.make2DN8();
+    connexity.make3DN26();
 
     // Load source image imSrc in ppm format, 2D RGB (8 bits)
     Image<RGB>::load(argv[1],imSrc);

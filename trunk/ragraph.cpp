@@ -12,8 +12,7 @@ void RAGraph::computeFlatZones()
 {
     imFlatZones.setSize(imSource.getSize());
 
-    FlatSE se;
-    se.make2DN8();
+    FlatSE se=this->connexity;
 
     std::queue<TOffset> fifo;
 
