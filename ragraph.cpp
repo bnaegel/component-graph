@@ -30,8 +30,8 @@ void RAGraph::computeFlatZones()
 
     se.setContext(imBorder.getSize());
 
-     Image<RGB>::iterator it;
-     Image<RGB>::iterator end=imBorder.end();
+    Image<RGB>::iterator it;
+    Image<RGB>::iterator end=imBorder.end();
 
     FlatSE::iterator itSe;
     FlatSE::iterator endSe=se.end();
@@ -40,40 +40,40 @@ void RAGraph::computeFlatZones()
 
     TOffset curOffset=0;
     for(it=imBorder.begin(); it!=end; ++it,curOffset++)
-        {
+    {
         if(resBorder(curOffset) ==0)
-            {
+        {
             fifo.push(curOffset);
 
             while(!fifo.empty())
-                {
+            {
                 TOffset p=fifo.front();
                 fifo.pop();
 
                 resBorder(p)=currentLabel;
 
                 for(itSe=se.begin(); itSe!=endSe; ++itSe)
-                    {
+                {
                     TOffset q=p+ *itSe;
 
                     if(imBorder(q)==imBorder(p) && resBorder(q)==0)
-                        {
+                    {
 
                         resBorder(q)=currentLabel;
                         fifo.push(q);
-                        }
                     }
                 }
-            currentLabel++;
             }
+            currentLabel++;
         }
+    }
 
-     Image<TLabel>::iteratorXYZ itLabelXYZ;
-     Image<TLabel>::iteratorXYZ endRes=imFlatZones.end();
+    Image<TLabel>::iteratorXYZ itLabelXYZ;
+    Image<TLabel>::iteratorXYZ endRes=imFlatZones.end();
     for(itLabelXYZ=imFlatZones.begin(); itLabelXYZ!=endRes; ++itLabelXYZ)
-        {
+    {
         *itLabelXYZ=resBorder(itLabelXYZ.x+back[0], itLabelXYZ.y+back[1], itLabelXYZ.z+back[2]);
-        }
+    }
 }
 
 void RAGraph::computeRAGraph() {
@@ -82,9 +82,10 @@ void RAGraph::computeRAGraph() {
     int dy=imSource.getSizeY();
     int dz=imSource.getSizeZ();
 
+    std::cout << dx << " " << dy << " " << dz << "\n";
+
     computeFlatZones();
-    Image<U8> tmp=imFlatZones;
-    tmp.save("labels.pgm");
+
     TLabel nbFlatZones=imFlatZones.getMax();
     // flat-zones are numbered 1,...
     // to achieve simple indexing we reserve nbFlatZones+1 nodes
