@@ -30,6 +30,8 @@ SOURCES += \
 
 INCLUDEPATH+=..
 
+
+
 HEADERS += \
     mainwindow.h \
     maindisplay.h \
