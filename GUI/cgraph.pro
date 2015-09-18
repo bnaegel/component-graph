@@ -1,19 +1,20 @@
-QMAKE_CXXFLAGS_RELEASE+= -O2
+#QMAKE_CXXFLAGS_RELEASE+= -O2
 
-QMAKE_CXXFLAGS+=-std=c++0x
-QMAKE_LFLAGS+=-std=c++0x
-QMAKE_CXXFLAGS_X86_64 += -std=c++0x -stdlib=libc++
-QMAKE_CXXFLAGS_X86_64+= -mmacosx-version-min=10.7
-QMAKE_LFLAGS_X86_64 += -std=c++0x -stdlib=libc++
-QMAKE_LFLAGS_X86_64-= -mmacosx-version-min=10.5
-QMAKE_LFLAGS_X86_64+= -mmacosx-version-min=10.7
+#QMAKE_CXXFLAGS+=-std=c++0x
+#QMAKE_LFLAGS+=-std=c++0x
+#QMAKE_CXXFLAGS_X86_64 += -std=c++0x -stdlib=libc++
+#QMAKE_CXXFLAGS_X86_64+= -mmacosx-version-min=10.7
+#QMAKE_LFLAGS_X86_64 += -std=c++0x -stdlib=libc++
+#QMAKE_LFLAGS_X86_64-= -mmacosx-version-min=10.5
+#QMAKE_LFLAGS_X86_64+= -mmacosx-version-min=10.7
 
 
 TEMPLATE = app
 CONFIG += release
 TARGET = cgraph
 
-
+QMAKE_CXXFLAGS += -std=c++11 -stdlib=libc++
+QMAKE_LFLAGS += -lc++
 
 
 QT+=core gui widgets concurrent

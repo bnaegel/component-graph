@@ -27,7 +27,19 @@ SOURCES += \
     cgraphdemo.cpp \
     ragraph.cpp \
     cgraphwatcher.cpp \
-    colorordering.cpp
+    colorordering.cpp \
+    GUI/core.cpp \
+    GUI/corefilter.cpp \
+    GUI/dialogimpulsenoise.cpp \
+    GUI/dialogNoise.cpp \
+    GUI/main.cpp \
+    GUI/maindisplay.cpp \
+    GUI/mainwindow.cpp \
+    GUI/moc_corefilter.cpp \
+    GUI/moc_dialogimpulsenoise.cpp \
+    GUI/moc_dialogNoise.cpp \
+    GUI/moc_mainwindow.cpp \
+    GUI/noise.cpp
 
 HEADERS += \
     OrderedQueue.h \
@@ -41,5 +53,20 @@ HEADERS += \
     cgraph.h \
     ragraph.h \
     cgraphwatcher.h \
-    colorordering.h
+    colorordering.h \
+    GUI/core.h \
+    GUI/corefilter.h \
+    GUI/dialogimpulsenoise.h \
+    GUI/dialogNoise.h \
+    GUI/maindisplay.h \
+    GUI/mainwindow.h \
+    GUI/noise.h \
+    GUI/ui_dialogimpulsenoise.h \
+    GUI/ui_dialogNoise.h \
+    GUI/ui_mainwindow.h \
+    FlatSE.hxx
+
+SUBDIRS += \
+    GUI/cgraph.pro \
+    GUI/cgraph.pro
 
