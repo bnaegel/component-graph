@@ -45,7 +45,3 @@ HEADERS += \
     colorordering.h \
     FlatSE.hxx
 
-SUBDIRS += \
-    GUI/cgraph.pro \
-    GUI/cgraph.pro
-
