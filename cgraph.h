@@ -49,6 +49,7 @@ public:
         }
     };
 
+
 public :
     RAGraph *rag; /*!< Region adjacency graph on which is computed the component-graph */
 

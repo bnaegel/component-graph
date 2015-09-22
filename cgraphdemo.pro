@@ -29,7 +29,6 @@ SOURCES += \
     cgraphwatcher.cpp \
     colorordering.cpp \
 
-
 HEADERS += \
     OrderedQueue.h \
     Image.h \
