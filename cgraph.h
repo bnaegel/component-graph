@@ -22,7 +22,6 @@
 using namespace LibTIM;
 using namespace std;
 
-
 /** Component-graph storage and computation **/
 
 class CGraph
@@ -48,7 +47,6 @@ public:
             child->fathers.push_back(this);
         }
     };
-
 
 public :
     RAGraph *rag; /*!< Region adjacency graph on which is computed the component-graph */
@@ -124,7 +122,6 @@ private:
     void paintNodeSup(Image<RGB> &imRes, Node *n, RGB &value);
 
     vector<Node *> computeComponents(Image<RGB> &im, FlatSE &connexity);
-
 };
 
 #endif // CGRAPH_H
