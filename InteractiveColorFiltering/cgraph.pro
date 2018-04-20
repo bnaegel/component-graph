@@ -26,8 +26,8 @@ SOURCES += \
     noise.cpp \
     dialogNoise.cpp \
     dialogimpulsenoise.cpp \
-    ../cgraph.cpp \
-    ../ragraph.cpp
+    cgraph.cpp \
+    ragraph.cpp
 
 INCLUDEPATH+=..
 
@@ -40,9 +40,9 @@ HEADERS += \
     noise.h \
     dialogNoise.h \
     dialogimpulsenoise.h \
-    ../cgraph.h \
-    ../colorordering.h \
-    ../ragraph.h
+    cgraph.h \
+    colorordering.h \
+    ragraph.h
 
 FORMS += \
     mainwindow.ui \
