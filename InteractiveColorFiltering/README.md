@@ -1,4 +1,4 @@
-#Interactive connected filtering for color images based on component-graphs
+# Interactive connected filtering for color images based on component-graphs
 
 This folder provides a graphical application based on Qt for color image filtering based on component-graphs.
 This work is described in [1].
