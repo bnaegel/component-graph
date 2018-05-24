@@ -8,5 +8,11 @@ This applications has been compiled with Qt 5. To compile, you can either import
 
 ## Usage
 
+First open a color image (all formats supported by Qt).
+
+(doc/ui.jpg)
+
+
+
 
 [1] B. Naegel et N. Passat. « Colour Image Filtering with Component-Graphs ». In : 2014 22nd International Conference on Pattern Recognition. Août 2014, p. 1621–1626.
