@@ -1,7 +1,7 @@
 # Component-graphs
 
 Component-graphs [1] are an extension of the concept of component-trees developed in the image processing domain [2].
-Component-trees enable to filter an image by means of the connected components of its *cuts* or *thresholdings*. Component-trees are defined on images having their values in a totally ordered space. Component-graphs extend the component-tree concept and are defined on images having their values in a space which is not totally ordered (i.e. partially ordered). 
+Component-trees enable to filter an image by means of the connected components of its *cuts* or *threshold sets*. Component-trees are defined on images having their values in a totally ordered space. Component-graphs extend the component-tree concept and are defined on images having their values in a space which is not totally ordered (i.e. partially ordered). 
 
 This repository contains two folders, each one corresponding to a stand-alone application based on component-graphs.
 - The folder [InteractiveColorFiltering](https://github.com/bnaegel/component-graph/tree/master/InteractiveColorFiltering) proposes a graphical interface for experimenting connected based filtering on color images with component-graphs, implementing the ideas exposed in [3]
