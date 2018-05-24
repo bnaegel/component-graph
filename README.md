@@ -9,8 +9,7 @@ This repository contains two folders, each one corresponding to a stand-alone ap
 
 The data structures of this code are based on the LibTIM library https://github.com/bnaegel/libtim
 
-[Benoît Naegel](http://images.icube.unistra.fr/fr/index.php/Beno%C3%AEt_Naegel)
-
+[Benoît Naegel](http://images.icube.unistra.fr/fr/index.php/Beno%C3%AEt_Naegel)\
 b.naegel@unistra.fr
 
 [1] P. Salembier, A. Oliveras and L. Garrido. « Anti-Extensive Connected Operators for Image and Sequence Processing ». In : IEEE Transactions on Image Processing 7.4 (1998), p. 555–570.
