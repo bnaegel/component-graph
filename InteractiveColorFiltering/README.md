@@ -25,8 +25,7 @@ Once the component-graphs are computed, you can interactively perform area and c
 
 The two sliders below : *adaptive filtering: area* and *adaptive filtering: contrast* enable to perform adaptive filtering, in which a fraction of components defined by the slider (x %) are kept based on the statistic distribution of attributes.
 This method is more robust when multiple patches are used, enable to hide the border effects. 
-(note that the buttons *adaptive filtering: area* and *adaptive filtering: contrast* are inoperant).
 
-
+Note that the buttons *adaptive filtering: area* and *adaptive filtering: contrast* are inoperant.
 
 [1] B. Naegel et N. Passat. « Colour Image Filtering with Component-Graphs ». In : 2014 22nd International Conference on Pattern Recognition. Août 2014, p. 1621–1626.
