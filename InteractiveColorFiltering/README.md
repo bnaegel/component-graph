@@ -9,7 +9,7 @@ This applications has been compiled with Qt 5. To compile, you can either import
 ## Usage
 
 First open a color image (all formats supported by Qt).
-#### Patch definition interface*
+#### Patch definition interface
 This interfce enables to subdivise the original image in overlapping patches as described in the paper.
 You can chose to compute the component-graph on the whole image (division in width and weight=1), but be warned that this may lead to a long computation time depending on the size of the input image.
 In order to accelerate the computation, you can subdivise the image into overlapping patches. This way, component-graphs are computed only on these patches, using multi-threading capacities of your CPUs.
