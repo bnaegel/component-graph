@@ -17,6 +17,8 @@
 
 #include "ragraph.h"
 
+#include "filters.hxx"
+
 using namespace std;
 
 // for LibTIM classes
@@ -186,6 +188,7 @@ void test1(int argc, char *argv[])
     result.save("testResult.pgm");
 }
 
+// demonstration of color image filtering based on shaping methodology
 void test2(int argc, char *argv[])
 {
     if(argc!=4)
@@ -194,24 +197,11 @@ void test2(int argc, char *argv[])
         exit(1);
     }
 
-    Image <RGB> inputImage;
+    Image<RGB> inputImage;
     Image<RGB>::load(argv[1],inputImage);
 
     auto areaMin=atoi(argv[2]);
     auto areaMax=atoi(argv[3]);
-
-//    const int numBand=4;
-//    typedef Tuple<int,numBand>  ImageType;
-//
-//    Image<ImageType> imTuple(10,10);
-//    imTuple.fill(0);
-//
-//    for(int i=0; i<imTuple.getBufSize(); ++i){
-//        for(int j=0; j<numBand; ++j) {
-//            int v=rand()%2;
-//            imTuple(i)[j]=v;
-//        }
-//    }
 
     // Declaration of :
     // -connexity (8-adjacency)
@@ -225,15 +215,17 @@ void test2(int argc, char *argv[])
     cgraph.computeGraph(myWatcher);
     cgraph.computeAttributes();
 
-    cgraph.writeDot<3>("cgraph.dot");
+    cgraph.writeDotFelsContrast<3>("cgraph.dot");
 
+    // non-increasing attribute
     cgraph.setShapingAttribute("fels contrast");
     Shaping<RGB> shaping(cgraph);
     shaping.computeShaping();
     shaping.computeArea();
+    shaping.computeContrast();
     shaping.writeDot("shaping.dot");
 
-    shaping.areaFiltering(areaMin,areaMax);
+    shaping.contrastFiltering(areaMin,areaMax);
 
     shaping.writeDot("shapingFiltered.dot");
 
@@ -245,15 +237,144 @@ void test2(int argc, char *argv[])
     imResult.save("shaping_result.ppm");
 }
 
+Image<U8> binarizeSegmentation(Image<RGB> &inputImage)
+{
+    Image<U8> result(inputImage.getSizeX(), inputImage.getSizeY());
+
+    for(int i=0; i<inputImage.getBufSize(); ++i) {
+        if(inputImage(i)[0]==255 && inputImage(i)[1]==0 && inputImage(i)[2]==0){
+            result(i)=255;
+        }
+        else result(i)=0;
+    }
+    return result;
+}
+
+void controlImTuple(Image<Tuple<int,3>> image)
+{
+    Image<U8> res1(image.getSize());
+    Image<U8> res2(image.getSize());
+    Image<U8> res3(image.getSize());
+
+    for(int i=0; i<image.getBufSize(); ++i){
+        res1(i)=image(i)[0] ? 255 : 0;
+        res2(i)=image(i)[1] ? 255 : 0;
+        res3(i)=image(i)[2] ? 255 : 0;
+    }
+
+    res1.save("res1.pgm");
+    res2.save("res2.pgm");
+    res3.save("res3.pgm");
+}
+
+// the number of segmentations should be known in advance, it defines the number of bands (type Tuple<int, numBand>)
+void test3(int argc, char *argv[])
+{
+    // input object database : color images
+    if(argc<3)
+    {
+        cout<<  "Usage: " << argv[0] << "<input image> [<segmentation 1> <segmentation 2>  <segmentation 3>] <cmin> <cmax>\n";
+        cout << "\t\t segmentation image : 0=background, non 0=foreground\n";
+        exit(1);
+    }
+
+    Image <U8> inputImage;
+    Image <U8>::load(argv[1],inputImage);
+
+    int dx=inputImage.getSizeX();
+    int dy=inputImage.getSizeY();
+
+    int contrastMin=atoi(argv[5]);
+    int contrastMax=atoi(argv[6]);
+
+
+    // load segmentation images (binary masks) 
+    std::vector<Image<U8>> segImages; 
+    // 3 bands 
+    const int numBand=3;
+
+    for(int i=0; i<numBand; ++i) {
+        Image<RGB> tmp;
+        Image<RGB>::load(argv[i+2],tmp);
+        Image<U8> seg=binarizeSegmentation(tmp);
+       
+        segImages.push_back(seg);
+    }
+
+    typedef Tuple<int,numBand> ImageType;
+    
+    Image<ImageType> imTuple(dx,dy);
+    imTuple.fill(0);
+
+    for(int i=0; i<imTuple.getBufSize(); ++i){
+        for(int j=0; j<numBand; ++j) {
+            int v=segImages[j](i);
+            imTuple(i)[j]=v>0 ? 1 : 0;
+        }
+        // // zone de consensus 
+        // if(imTuple(i)[0]==1 && imTuple(i)[1]==1 && imTuple(i)[2]==1  ){
+        //     imTuple(i)[0]=0; imTuple(i)[1]=0; imTuple(i)[2]=0;
+        // }
+    }
+
+    controlImTuple(imTuple);
+
+    Image<U8> gradImage=gradientSobel(inputImage);
+    gradImage.save("gradSobel.pgm");
+
+    // Declaration of :
+    // -connexity (8-adjacency)
+    FlatSE connexity;
+    connexity.make2DN8();
+
+    TupleMarginalOrdering<numBand> order;
+    Rag<ImageType> rag=computeRag(imTuple,connexity);
+    graphWatcher *myWatcher=new graphWatcher(inputImage.getBufSize());
+    auto cgraph=CGraph<ImageType>(imTuple,rag,order);
+    cgraph.computeGraph(myWatcher);
+    cgraph.computeAttributes();
+    cgraph.computeMeanGradientHelper(gradImage);
+
+    cgraph.writeDot<3>("cgraph.dot");
+
+    cgraph.setShapingAttribute("mean gradient");
+    Shaping<ImageType> shaping(cgraph);
+    shaping.computeShaping();
+    shaping.computeContrast();
+    shaping.computeArea();
+    shaping.writeDot("shaping.dot");
+
+    shaping.contrastFiltering(contrastMin,contrastMax);
+
+    shaping.writeDot("shapingFiltered.dot");
+
+    // reconstruct graph
+    shaping.constructGraph();
+
+    // Compute resulting image from filtered cgraph
+    Image<ImageType> imResult=shaping.cgraph.constructImage(order);
+
+    Image<U8> result(imResult.getSize());
+    for(int i=0; i<result.getBufSize(); ++i) {
+        if(imResult(i)[0]==1 || imResult(i)[1]==1 || imResult(i)[2]==1){
+            result(i)=255;
+        }
+        else result(i)=0;
+    }
+    result.save("shaping_result.pgm");
+}
+
 /**
 * JMIV experiments
 **/
 
 int main(int argc, char *argv[])
 {
-//    test1(argc,argv);
+    // test2(argc,argv);
+    test3(argc,argv);
 
-    test2(argc,argv);
+   
+
 
 //    TupleMarginalOrdering<numBand> order;
 

@@ -44,6 +44,7 @@ public:
         int contrast;
         int compacity;
         int fels_contrast; // contrast using felszenswab strategy (max int - min ext)
+        int mean_gradient; // mean gradient along the contour of the node
         int attr; // abstract attribute used in shaping
         
         // Eloise add
@@ -113,6 +114,8 @@ public :
     /** Write graph in dot format **/
     template <int N>
     int writeDot(const char *filename);
+    template <int N>
+    int writeDotFelsContrast(const char *filename);
 
     void areaFiltering(int areaMin);
 //    void elongFiltering(int elongMin);
@@ -145,6 +148,7 @@ public:
     void computeAreaHelper();
     void computeCompacityHelper();
     template <int N> void computeFelsContrastHelper();
+    void computeMeanGradientHelper(Image<U8> &gradImage);
 
 };
 

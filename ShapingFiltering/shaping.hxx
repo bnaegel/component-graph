@@ -484,7 +484,7 @@ void Shaping<T>::constructGraph()
         }
     }
 }
-
+ 
 template<class T>
 int Shaping<T>::writeDot(const char *filename)
 {
@@ -510,8 +510,8 @@ int Shaping<T>::writeDot(const char *filename)
                 // write father->son relation if the node is not the root
                 if(tmp->father!=tmp)
                 {
-                file << "\t" << " \"" << tmp->father->index << ",h=" << tmp->father->weight << "," <<  " a= " << tmp->father->area << "," << "c= " << tmp->father->contrast << "\" "
-                   << "->" << " \"" << tmp->index << ",h=" << tmp->weight << ","   << " a= " << tmp->area << "," << "c= " << tmp->contrast <<
+                file << "\t" << " \"" << tmp->father->index << ": h=" << tmp->father->weight << " " <<  " a=" << tmp->father->area << " " << "c=" << tmp->father->contrast << "\" "
+                   << "->" << " \"" << tmp->index << ": h=" << tmp->weight << " "   << " a=" << tmp->area << " " << "c=" << tmp->contrast <<
                     "\" " <<
                     ";\n";
                 }

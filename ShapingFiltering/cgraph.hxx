@@ -546,7 +546,7 @@ Image<T> CGraph<T>::constructImage(Ordering<T> &order)
 
     vector<bool> processed(graph.size());
 
-    for(int i=0; i<graph.size(); i++) {
+    for(int i=0; i<graph.size(); i++) { 
 
         T value=graph[i]->value;
 
@@ -652,29 +652,29 @@ int CGraph<T>::writeDot(const char *filename)
 
             std::stringstream nodeName;
             nodeName.str("");
-            nodeName << "\"" << tmp->index << ":(";
+            nodeName << "\"" << tmp->index << ":((";
             for(int i=0; i<N; ++i) {
                 nodeName << (int)tmp->value[i];
                 if(i==N-1)
-                    nodeName << " ";
+                    nodeName << ") ";
                 else nodeName << ",";
             }
-            nodeName << " a=" << tmp->area << " c=" << tmp->compacity << ")\"";
+            nodeName << " a=" << tmp->area << " g=" << tmp->mean_gradient << ")\"";
             if(!tmp->active)
                 file << "\t" << nodeName.str() << "[style=filled, fillcolor=grey];\n";
 
             for(int i=0; i<tmp->childs.size(); i++)
             {
                 std::stringstream nodeNameChild;
-                nodeNameChild << "\"" << tmp->childs[i]->index << ":(";
+                nodeNameChild << "\"" << tmp->childs[i]->index << ":((";
                 for(int k=0; k<N; ++k) {
                     nodeNameChild << (int) tmp->childs[i]->value[k];
                     if (k == N - 1)
-                        nodeNameChild << " ";
+                        nodeNameChild << ") ";
                     else nodeNameChild << ",";
 
                 }
-                nodeNameChild <<" a=" << tmp->childs[i]->area  << " c=" << tmp->childs[i]->compacity << ")\"";
+                nodeNameChild <<" a=" << tmp->childs[i]->area  << " g=" << tmp->childs[i]->mean_gradient << ")\"";
 
                 file << "\t" <<
                         nodeName.str() << "->" << nodeNameChild.str() << ";\n";
@@ -697,6 +697,80 @@ int CGraph<T>::writeDot(const char *filename)
         return 0;
 }
 
+
+template <class T>
+template <int N>
+int CGraph<T>::writeDotFelsContrast(const char *filename)
+{
+    if(root!=0)
+    {
+        std::ofstream file(filename,std::ios_base::trunc);
+        if(!file)
+        {
+            std::cerr << "File I/O error\n";
+            return 0;
+        }
+
+        /** Maximum label of the graph **/
+        unsigned long labelMax=graph.size()+1;
+        bool isActive[labelMax];
+        for(int i=0; i<labelMax; i++) isActive[i]=true;
+
+        file << "digraph G {\n";
+
+        std::queue <Node *> fifo;
+        fifo.push(root);
+        while(!fifo.empty() )
+        {
+            Node *tmp=fifo.front();
+            fifo.pop();
+
+            std::stringstream nodeName;
+            nodeName.str("");
+            nodeName << "\"" << tmp->index << ":(";
+            for(int i=0; i<N; ++i) {
+                nodeName << (int)tmp->value[i];
+                if(i==N-1)
+                    nodeName << " ";
+                else nodeName << ",";
+            }
+            nodeName << " a=" << tmp->area << " f=" << tmp->fels_contrast << ")\"";
+            if(!tmp->active)
+                file << "\t" << nodeName.str() << "[style=filled, fillcolor=grey];\n";
+
+            for(int i=0; i<tmp->childs.size(); i++)
+            {
+                std::stringstream nodeNameChild;
+                nodeNameChild << "\"" << tmp->childs[i]->index << ":(";
+                for(int k=0; k<N; ++k) {
+                    nodeNameChild << (int) tmp->childs[i]->value[k];
+                    if (k == N - 1)
+                        nodeNameChild << " ";
+                    else nodeNameChild << ",";
+
+                }
+                nodeNameChild <<" a=" << tmp->childs[i]->area  << " f=" << tmp->childs[i]->fels_contrast << ")\"";
+
+                file << "\t" <<
+                        nodeName.str() << "->" << nodeNameChild.str() << ";\n";
+
+                if(isActive[tmp->childs[i]->index])
+                {
+                    fifo.push(tmp->childs[i]);
+                    isActive[tmp->childs[i]->index]=false;
+                }
+            }
+
+        }
+
+        file << "}\n";
+
+        file.close();
+        return 1;
+    }
+    else
+        return 0;
+}
 
 //template <class T>
 //void CGraph<T>::computeAreaHelper(){
@@ -866,10 +940,49 @@ void CGraph<T>::computeFelsContrastHelper() {
             }
         }
         n->fels_contrast=dist_min-dist_max;
-        n->compacity=n->fels_contrast;
     }
 
     root->fels_contrast=0;
+}
+
+
+template<class T>
+void CGraph<T>::computeMeanGradientHelper(Image<U8> &gradImage) {
+
+    int dx=imSource.getSizeX();
+    int dy=imSource.getSizeY();
+
+    FlatSE connexity=rag.connexity;
+
+    double curMeanGradient,curN;
+
+    for(Node *n : graph) {
+        curMeanGradient=0;
+        curN=0;
+       
+        for(int r : n->regions) {
+            for (int i = 0; i < rag.vertices[r].pixels.size(); ++i) {
+                int curPixel = rag.vertices[r].pixels[i];
+                Point<TCoord> p(curPixel % dx, curPixel / dx);
+                for (int j = 0; j < connexity.getNbPoints(); ++j) {
+                    Point<TCoord> q = p + connexity.getPoint(j);
+                    if (q.x >= 0 && q.x < dx && q.y >= 0 && q.y < dy) {
+
+                        // if p is a contour point 
+                        if (!order.islessequal(n->value, imSource(q))) {
+                            curMeanGradient+=gradImage(p);
+                            curN++;
+                        } 
+                    }
+                }
+            }
+        }
+        if(curN!=0)
+            n->mean_gradient=curMeanGradient/curN;
+        else n->mean_gradient=0;
+    }
+
+    root->mean_gradient=0;
 }
 
 template<class T>
@@ -880,6 +993,7 @@ int CGraph<T>::computeAttributes() {
     computeCompacityHelper();
     // int N
     computeFelsContrastHelper<3>();
+
 
     return 0;
 }
@@ -908,6 +1022,12 @@ void CGraph<T>::setShapingAttribute(const std::string &attrname)
     if(attrname=="fels contrast") {
         for (Node *n : graph ){
             n->attr=-n->fels_contrast;
+        }
+    }
+
+    if(attrname=="mean gradient") {
+        for (Node *n : graph ){
+            n->attr=n->mean_gradient;
         }
     }
 
